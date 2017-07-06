@@ -23,22 +23,20 @@ struct CBNode{
 };
 
 /*============BINARY TREE ==*/
-template<class T,class C> class CBTreeIterator;
 
 template<class T, class C>
 class CBTree{
-    friend class CBTreeIterator<T,C>;
 
     typedef CBNode<T>* pNode;
     typedef CBNode<T> Node;
-
 
     pNode mRoot;
     C mCompFunctor;
     int treeSize;
 
 public:
-    typedef CBTreeIterator<T,C> iterator;
+
+    class iterator;
 
     CBTree():mRoot(nullptr),treeSize(0){};
 
@@ -52,47 +50,24 @@ public:
     int size(){return treeSize;}
 
     iterator begin(){
-        return iterator(*this,0);
+        return iterator(this->mRoot);
     }
     iterator end(){
-        return iterator(*this,1);
+
     }
 };
 
-//definiendo el iterator de CBTree
-template<class T,class C>
-class CBTreeIterator{
-    typedef CBNode<T>* pNode;
-    typedef CBTreeIterator<T,C> iterator;
+/*============BINARY TREE ITERATOR ==*/
 
-    CBTree<T,C> &myBTree;
-    stack< pNode > pilaNodos;
-    pNode * currentNode;
+template<class T, class C>class CBTree<T,C>::iterator{
+    pNode curr;
 public:
-    CBTreeIterator(CBTree<T,C> & btree, bool flag):myBTree(btree){
-        currentNode = &(myBTree.mRoot);
-        if(!flag){
-            while(*currentNode && (*currentNode)->mSon[0]){
-                    pilaNodos.push(*currentNode);
-                    currentNode = &((*currentNode)->mSon[0]);
-                }
-            }
-        else{
-            while(*currentNode && (*currentNode)->mSon[1])
-                currentNode = &((*currentNode)->mSon[1]);
-            }
-    } // fin del constructor
-    T & operator*(){return (*currentNode)->mData;}
-    bool operator==(const CBTreeIterator<T,C>& right){return this->currentNode == right.currentNode;}
-    bool operator!=(const CBTreeIterator<T,C>& right){return !((*this)==right);};
+    iterator(pNode p):curr(p){};
 
-    iterator & operator++(){
-
-        return (*this);
-    }
-
-
+    T & operator*(){return curr->mData;}
 };
+
+
 /*=======================================*/
 /**=======================================**/
 /**=======================================**/
@@ -105,14 +80,14 @@ int main(){
     A.insertar(7);
     CBNode<int>*p = A.getRoot();
     A.inorderPrint(p); cout << endl;
-    A.remover(5);
-    A.remover(4);
     A.inorderPrint(p);
     CBTree<int,CGreater<int>>::iterator it=A.begin();
-    CBTree<int,CGreater<int>>::iterator ito=A.end();
-    cout <<endl;
-    if(it != ito) cout << "si";
-    else cout << "hello";
+    cout<< *it;
+
+    //CBTree<int,CGreater<int>>::iterator ito=A.end();
+    //cout <<endl;
+    //if(it != ito) cout << "si";
+    //else cout << "hello";
 
 
 
